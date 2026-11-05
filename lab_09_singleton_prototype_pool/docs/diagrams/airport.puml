@@ -1,0 +1,34 @@
+@startuml
+skinparam classAttributeIconSize 0
+class FlightControlCenter {
+    - {static} FlightControlCenter instance
+    - Map<Integer, String> runwayStatus
+    - FlightControlCenter()
+    + {static} FlightControlCenter getInstance()
+    + synchronized boolean bookRunway(int runwayNumber, String flightId)
+}
+
+class ArrivalsModule {
+    + void processArrival(String flightId, int runwayNumber)
+}
+
+class DeparturesModule {
+    + void processDeparture(String flightId, int runwayNumber)
+}
+
+ArrivalsModule ..> FlightControlCenter : використовує (getInstance)
+DeparturesModule ..> FlightControlCenter : використовує (getInstance)
+
+note top of FlightControlCenter
+  Роль у шаблоні: Singleton (Одинак)
+  Гарантує наявність єдиного центру управління смугами
+end note
+
+note right of ArrivalsModule
+  Роль у шаблоні: Клієнт
+end note
+
+note right of DeparturesModule
+  Роль у шаблоні: Клієнт
+end note
+@enduml*

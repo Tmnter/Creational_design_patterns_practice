@@ -1,0 +1,40 @@
+@startuml
+skinparam classAttributeIconSize 0
+interface Cloneable {
+}
+
+class CabinLayout {
+    - String layoutType
+    - List<String> blockedSeats
+    + CabinLayout(String layoutType)
+    + void blockSeat(String seat)
+    + CabinLayout clone()
+    + String toString()
+}
+
+class Flight {
+    - String route
+    - String date
+    - CabinLayout cabinLayout
+    - List<String> menu
+    + Flight(String route, String date, String layoutType)
+    + void setMenu(String newMenu)
+    + void blockSeat(String seat)
+    + Flight clone()
+    + void displayInfo(String label)
+}
+
+Cloneable <|.. CabinLayout : реалізує
+Cloneable <|.. Flight : реалізує
+Flight *-- CabinLayout : композиція (вкладений об'єкт)
+
+note top of Flight
+  Роль у шаблоні: ConcretePrototype
+  Реалізує метод клонування для створення нових рейсів
+end note
+
+note right of CabinLayout
+  Роль у шаблоні: Додатковий компонент
+  Має власний метод клонування для забезпечення Deep Copy
+end note
+@enduml
