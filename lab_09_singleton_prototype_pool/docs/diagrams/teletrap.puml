@@ -1,0 +1,37 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Telebridge {
+    - id: String
+    - isBusy: boolean
+    - currentFlight: String
+    - usageCount: int
+    + Telebridge(id: String)
+    + getId(): String
+    + isBusy(): boolean
+    + getUsageCount(): int
+    + occupy(flightId: String): void
+    + reset(): void
+    + prepare(): void
+}
+
+class TelebridgePool {
+    - pool: List<Telebridge>
+    - waitingQueue: Queue<String>
+    - totalCreatedCount: int
+    + TelebridgePool(int capacity)
+    + acquireBridge(flightId: String): void
+    + releaseBridge(bridgeId: String): void
+    - getAvailableBridge(): Telebridge
+    - findBridgeById(id: String): Telebridge
+    + printStatistics(): void
+}
+
+class AirportSimulation {
+    + {static} main(args: String[]): void
+}
+
+TelebridgePool o--> "*" Telebridge : керує / зберігає
+AirportSimulation ..> TelebridgePool : використовує
+
+@enduml
