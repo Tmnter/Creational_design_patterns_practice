@@ -1,4 +1,4 @@
-package sms;
+package org.example.sms;
 interface Notification {
     void send(String flightNumber, String messageText);
 }

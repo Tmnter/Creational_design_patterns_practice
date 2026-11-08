@@ -1,3 +1,4 @@
+package org.example.teletrap;
 public class Telebridge {
     private String id;
     private boolean isBusy;

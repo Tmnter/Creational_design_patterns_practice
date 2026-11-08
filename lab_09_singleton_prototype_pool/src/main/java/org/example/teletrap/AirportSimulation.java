@@ -1,4 +1,4 @@
-package main.java.org.example.teletrap;
+package org.example.teletrap;
 public class AirportSimulation {
     public static void main(String[] args) {
         System.out.println("=== ДЕМОНСТРАЦІЯ ЗАВДАННЯ 3: РОЗПОДІЛ ТЕЛЕТРАПІВ ===");

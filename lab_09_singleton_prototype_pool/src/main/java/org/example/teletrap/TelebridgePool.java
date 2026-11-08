@@ -1,4 +1,4 @@
-package main.java.org.example.teletrap;
+package org.example.teletrap;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

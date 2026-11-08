@@ -1,4 +1,4 @@
-package sms;
+package org.example.sms;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 

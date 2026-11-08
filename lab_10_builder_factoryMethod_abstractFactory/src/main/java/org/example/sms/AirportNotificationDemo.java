@@ -1,4 +1,4 @@
-package sms;
+package org.example.sms;
 import java.util.ArrayList;
 import java.util.List;
 
