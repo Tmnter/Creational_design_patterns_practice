@@ -1,0 +1,84 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam monochrome true
+
+' --- Абстрактні та інтерфейсні класи ---
+
+interface Notification {
+    + {abstract} send(flightNumber: String, messageText: String): void
+}
+
+abstract class NotificationProcess {
+    + {abstract} createNotification(): Notification
+    + notifyPassenger(flightNumber: String, messageText: String): void
+}
+
+' --- Конкретні продукти ---
+
+class SmsNotification {
+    + send(flightNumber: String, messageText: String): void
+}
+
+class EmailNotification {
+    + send(flightNumber: String, messageText: String): void
+}
+
+class BoardNotification {
+    + send(flightNumber: String, messageText: String): void
+}
+
+class MobileAppNotification {
+    + send(flightNumber: String, messageText: String): void
+}
+
+' --- Конкретні творці ---
+
+class SmsNotificationProcess {
+    + createNotification(): Notification
+}
+
+class EmailNotificationProcess {
+    + createNotification(): Notification
+}
+
+class BoardNotificationProcess {
+    + createNotification(): Notification
+}
+
+class MobileAppNotificationProcess {
+    + createNotification(): Notification
+}
+
+' --- Зв'язки та наслідування ---
+
+Notification <|.. SmsNotification : <<реалізація>>
+Notification <|.. EmailNotification : <<реалізація>>
+Notification <|.. BoardNotification : <<реалізація>>
+Notification <|.. MobileAppNotification : <<реалізація>>
+
+NotificationProcess <|-- SmsNotificationProcess : <<наслідування>>
+NotificationProcess <|-- EmailNotificationProcess : <<наслідування>>
+NotificationProcess <|-- BoardNotificationProcess : <<наслідування>>
+NotificationProcess <|-- MobileAppNotificationProcess : <<наслідування>>
+
+NotificationProcess ..> Notification : <<створює>>
+
+' --- Примітки (ролі в шаблоні Factory Method) ---
+note top of NotificationProcess
+  **Creator** (Творець)
+  Описує загальний процес сповіщення,
+  який не залежить від конкретних каналів.
+end note
+
+note top of Notification
+  **Product** (Продукт)
+  Спільний інтерфейс для всіх
+  каналів сповіщень.
+end note
+
+note right of MobileAppNotificationProcess
+  Додано новим класом без
+  зміни загального процесу.
+end note
+
+@@enduml
