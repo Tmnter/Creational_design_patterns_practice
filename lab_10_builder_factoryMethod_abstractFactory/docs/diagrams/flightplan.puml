@@ -1,0 +1,39 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class FlightPlan {
+    - route: String
+    - fuelCalculation: Double
+    - weatherBriefing: String
+    - alternateAirports: List<String>
+    - cargoData: String
+    - specialInstructions: String
+    + FlightPlan(builder: FlightPlanBuilder)
+    + displayInfo(label: String): void
+}
+
+class FlightPlanBuilder {
+    - route: String
+    - fuelCalculation: Double
+    - weatherBriefing: String
+    - alternateAirports: List<String>
+    - cargoData: String
+    - specialInstructions: String
+    + setRoute(route: String): FlightPlanBuilder
+    + setFuelCalculation(fuel: double): FlightPlanBuilder
+    + setWeatherBriefing(weather: String): FlightPlanBuilder
+    + setAlternateAirports(airports: List<String>): FlightPlanBuilder
+    + setCargoData(cargo: String): FlightPlanBuilder
+    + setSpecialInstructions(instructions: String): FlightPlanBuilder
+    + build(): FlightPlan
+}
+
+class FlightPlanDirector {
+    + constructTrainingFlight(builder: FlightPlanBuilder): FlightPlan
+}
+
+FlightPlanBuilder +-- FlightPlan : виготовляє
+FlightPlanDirector ..> FlightPlanBuilder : керує кроками
+note left of FlightPlanBuilder : Реалізує шаблон Builder\nз перевіркою обов'язкових полів
+
+@enduml

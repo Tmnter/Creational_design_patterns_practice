@@ -1,0 +1,56 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface Stairs {
+    + extend(): void
+}
+
+interface Tug {
+    + tow(): void
+}
+
+interface Loader {
+    + loadCargo(): void
+}
+
+interface AirportEquipmentFactory {
+    + createStairs(): Stairs
+    + createTug(): Tug
+    + createLoader(): Loader
+    + getPlaneType(): String
+}
+
+class A320EquipmentFactory {
+    + createStairs(): Stairs
+    + createTug(): Tug
+    + createLoader(): Loader
+    + getPlaneType(): String
+}
+
+class ATREquipmentFactory {
+    + createStairs(): Stairs
+    + createTug(): Tug
+    + createLoader(): Loader
+    + getPlaneType(): String
+}
+
+class WideBodyEquipmentFactory {
+    + createStairs(): Stairs
+    + createTug(): Tug
+    + createLoader(): Loader
+    + getPlaneType(): String
+}
+
+class AirportDispatcher {
+    + serviceFlight(flightNumber: String, factory: AirportEquipmentFactory): void
+}
+
+AirportEquipmentFactory <|.. A320EquipmentFactory : реалізує
+AirportEquipmentFactory <|.. ATREquipmentFactory : реалізує
+AirportEquipmentFactory <|.. WideBodyEquipmentFactory : реалізує
+
+AirportDispatcher --> AirportEquipmentFactory : працює через абстракцію
+
+note bottom of AirportDispatcher : Диспетчерська не знає конкретних класів,\nпрацює лише з фабрикою та інтерфейсами продуктів
+
+@enduml
