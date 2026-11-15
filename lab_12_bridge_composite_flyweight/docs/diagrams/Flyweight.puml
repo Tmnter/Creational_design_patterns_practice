@@ -1,0 +1,43 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class ServiceClassFlyweight {
+    - String className
+    - String description
+    - int seatWidth
+    - double pitch
+    - String amenities
+    + ServiceClassFlyweight(className: String, description: String, seatWidth: int, pitch: double, amenities: String)
+    + displaySharedData(): void
+}
+
+class ServiceClassFactory {
+    {static} - Map<String, ServiceClassFlyweight> cache
+    {static} - int createdFlyweightsCount
+    {static} + getServiceClass(...): ServiceClassFlyweight
+    {static} + getCreatedFlyweightsCount(): int
+}
+
+class Seat {
+    - int row
+    - char letter
+    - String passengerName
+    - ServiceClassFlyweight serviceClass
+    + Seat(row: int, letter: char, passengerName: String, serviceClass: ServiceClassFlyweight)
+    + displaySeatInfo(): void
+    + getServiceClass(): ServiceClassFlyweight
+}
+
+Seat o-- ServiceClassFlyweight : агрегація (розділяє спільний стан)
+ServiceClassFactory --> ServiceClassFlyweight : керує кешем
+
+note top of ServiceClassFlyweight
+  Роль у шаблоні: Flyweight (Внутрішній/intrinsic стан)
+  Зберігає дані, що дублюються (опис, ширина тощо)
+end note
+
+note right of Seat
+  Роль у шаблоні: Context (Зовнішній/extrinsic стан)
+  Зберігає унікальні дані окремого місця (ряд, пасажир)
+end note
+@enduml
