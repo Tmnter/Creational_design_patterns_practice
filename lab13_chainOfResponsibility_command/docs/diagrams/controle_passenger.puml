@@ -1,0 +1,42 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+abstract class CheckHandler {
+    # CheckHandler nextHandler
+    + setNext(nextHandler: CheckHandler): CheckHandler
+    {abstract} + handle(passenger: Passenger): void
+}
+
+class TicketCheckHandler {
+    + handle(passenger: Passenger): void
+}
+
+class PassportCheckHandler {
+    + handle(passenger: Passenger): void
+}
+
+class CustomsCheckHandler {
+    + handle(passenger: Passenger): void
+}
+
+class SecurityCheckHandler {
+    + handle(passenger: Passenger): void
+}
+
+class LuggageWeightCheckHandler {
+    + handle(passenger: Passenger): void
+}
+
+CheckHandler <|-- TicketCheckHandler
+CheckHandler <|-- PassportCheckHandler
+CheckHandler <|-- CustomsCheckHandler
+CheckHandler <|-- SecurityCheckHandler
+CheckHandler <|-- LuggageWeightCheckHandler
+
+CheckHandler o-- CheckHandler : наступний обробник (nextHandler)
+
+note top of CheckHandler
+  Патерн: Chain of Responsibility
+  Кожна перевірка вирішує: передати далі чи зупинити
+end note
+@enduml
