@@ -1,0 +1,58 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface Ticket {
+    + getDescription(): String
+    + getCost(): double
+}
+
+class BaseTicket {
+    - String route
+    + BaseTicket(route: String)
+    + getDescription(): String
+    + getCost(): double
+}
+
+abstract class TicketDecorator {
+    # Ticket ticket
+    + TicketDecorator(ticket: Ticket)
+    + getDescription(): String
+    + getCost(): double
+}
+
+class BaggageOption {
+    + BaggageOption(ticket: Ticket)
+    + getDescription(): String
+    + getCost(): double
+}
+
+class InsuranceOption {
+    + InsuranceOption(ticket: Ticket)
+    + getDescription(): String
+    + getCost(): double
+}
+
+class PriorityBoardingOption {
+    + PriorityBoardingOption(ticket: Ticket)
+    + getDescription(): String
+    + getCost(): double
+}
+
+Ticket <|.. BaseTicket : реалізує
+Ticket <|.. TicketDecorator : реалізує
+TicketDecorator o-- Ticket : агрегація (обгортає)
+
+TicketDecorator <|-- BaggageOption : успадковує
+TicketDecorator <|-- InsuranceOption : успадковує
+TicketDecorator <|-- PriorityBoardingOption : успадковує
+
+note top of TicketDecorator
+  Роль у шаблоні: Decorator
+  Зберігає посилання на вкладений об'єкт Ticket
+end note
+
+note right of BaggageOption
+  Роль у шаблоні: ConcreteDecorator
+  Динамічно додає ціну та опис послуги
+end note
+@enduml

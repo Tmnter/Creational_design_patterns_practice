@@ -1,0 +1,49 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface WeatherProvider {
+    + getTemperatureCelsius(): double
+    + getWindSpeedMs(): double
+    + getVisibilityMeters(): double
+}
+
+class ExternalMeteoServiceA {
+    + fetchTempFahrenheit(): double
+    + fetchWindKnots(): double
+    + fetchVisibilityMiles(): double
+}
+
+class MeteoAdapterA {
+    - ExternalMeteoServiceA externalService
+    + MeteoAdapterA(externalService: ExternalMeteoServiceA)
+    + getTemperatureCelsius(): double
+    + getWindSpeedMs(): double
+    + getVisibilityMeters(): double
+}
+
+class FlightControlCenter {
+    - WeatherProvider weatherProvider
+    + FlightControlCenter(weatherProvider: WeatherProvider)
+    + evaluateFlightConditions(): void
+}
+
+WeatherProvider <|.. MeteoAdapterA : реалізує
+MeteoAdapterA o-- ExternalMeteoServiceA : агрегація (адаптує)
+FlightControlCenter --> WeatherProvider : використовує
+
+note top of MeteoAdapterA
+  Роль у шаблоні: Adapter
+  Конвертує Фаренгейти, вузли та милі
+  у Цельсії, м/с та метри
+end note
+
+note right of ExternalMeteoServiceA
+  Роль у шаблоні: Adaptee (Сторонній сервіс)
+  Змінити код неможливо
+end note
+
+note right of FlightControlCenter
+  Роль у шаблоні: Client
+  Працює лише через WeatherProvider
+end note
+@enduml
