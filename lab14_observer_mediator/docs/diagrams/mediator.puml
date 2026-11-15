@@ -1,0 +1,71 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface AirportMediator {
+    + notify(sender: GroundService, event: String): void
+}
+
+abstract class GroundService {
+    # AirportMediator mediator
+    # String name
+    + GroundService(mediator: AirportMediator, name: String)
+    + getName(): String
+}
+
+class CleaningService {
+    + CleaningService(mediator: AirportMediator)
+    + finishCleaning(): void
+}
+
+class CateringService {
+    + CateringService(mediator: AirportMediator)
+    + startCatering(): void
+}
+
+class BaggageService {
+    + BaggageService(mediator: AirportMediator)
+    + finishBaggage(): void
+}
+
+class RefuelingService {
+    + RefuelingService(mediator: AirportMediator)
+    + requestRefueling(isBoarding: boolean): void
+    + startRefueling(): void
+}
+
+class TowingService {
+    + TowingService(mediator: AirportMediator)
+    + startTowing(): void
+}
+
+class AirportControlMediator {
+    - CleaningService cleaningService
+    - CateringService cateringService
+    - BaggageService baggageService
+    - RefuelingService refuelingService
+    - TowingService towingService
+    + notify(sender: GroundService, event: String): void
+}
+
+AirportMediator <|.. AirportControlMediator : реалізує
+GroundService <|-- CleaningService
+GroundService <|-- CateringService
+GroundService <|-- BaggageService
+GroundService <|-- RefuelingService
+GroundService <|-- TowingService
+
+GroundService o-- AirportMediator : знає лише посередника
+AirportControlMediator o-- GroundService : керує та координує
+
+note top of AirportControlMediator
+  Роль у шаблоні: Mediator (Посередник)
+  Містить усі бізнес-правила взаємодії
+  між службами та приймає рішення
+end note
+
+note right of GroundService
+  Роль у шаблоні: Colleague (Колеги)
+  Не знають одна про одну, лише надсилають
+  сповіщення посереднику
+end note
+@enduml
