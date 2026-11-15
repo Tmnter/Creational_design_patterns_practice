@@ -1,0 +1,40 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface CargoComponent {
+    + getWeight(): double
+    + print(indent: String): void
+}
+
+class Item {
+    - String name
+    - double weight
+    + Item(name: String, weight: double)
+    + getWeight(): double
+    + print(indent: String): void
+}
+
+class CargoContainer {
+    - String name
+    - List<CargoComponent> children
+    + CargoContainer(name: String)
+    + add(component: CargoComponent): void
+    + getWeight(): double
+    + print(indent: String): void
+}
+
+CargoComponent <|.. Item : реалізує
+CargoComponent <|.. CargoContainer : реалізує
+CargoContainer o-- CargoComponent : агрегація (містить в собі інші компоненти)
+
+note top of CargoContainer
+  Роль у шаблоні: Composite
+  Містить дочірні елементи (листки або інші контейнери)
+  та рекурсивно обчислює загальну вагу
+end note
+
+note right of Item
+  Роль у шаблоні: Leaf (Листок)
+  Кінцевий об'єкт без дочірніх елементів
+end note
+@enduml
