@@ -1,0 +1,82 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+title Діаграма класів: Операції диспетчера з розкладом (Шаблон Command)
+
+class Main <<Client>> {
+    + {static} main(args : String[]) : void
+}
+
+class Logger <<Utility>> {
+    - {static} TIME_FORMATTER : DateTimeFormatter
+    + {static} log(source : String, message : String) : void
+}
+
+class ScheduleManager <<Receiver>> {
+    - flightNumber : String
+    - time : String
+    - gate : String
+    + ScheduleManager(flightNumber : String, time : String, gate : String)
+    + setTime(time : String) : void
+    + setGate(gate : String) : void
+    + printSchedule(source : String) : void
+}
+
+interface Command <<Command>> {
+    + execute() : void
+    + undo() : void
+    + getDescription() : String
+}
+
+class ChangeFlightTimeCommand <<ConcreteCommand>> {
+    - scheduleManager : ScheduleManager
+    - previousTime : String
+    - newTime : String
+    + ChangeFlightTimeCommand(scheduleManager : ScheduleManager, newTime : String)
+    + execute() : void
+    + undo() : void
+    + getDescription() : String
+}
+
+class ChangeGateCommand <<ConcreteCommand>> {
+    - scheduleManager : ScheduleManager
+    - previousGate : String
+    - newGate : String
+    + ChangeGateCommand(scheduleManager : ScheduleManager, newGate : String)
+    + execute() : void
+    + undo() : void
+    + getDescription() : String
+}
+
+class DispatcherConsole <<Invoker>> {
+    - history : LinkedList<Command>
+    - queue : Queue<Command>
+    - auditLog : List<String>
+    + executeCommand(command : Command) : void
+    + undoLast() : void
+    + addCommandToQueue(command : Command) : void
+    + executeBatch() : void
+    + printAuditLog() : void
+}
+
+' Зв'язки між класами
+Main ..> DispatcherConsole : створює та використовує
+Main ..> ScheduleManager : створює
+Main ..> ChangeFlightTimeCommand : інстанціює
+Main ..> ChangeGateCommand : інстанціює
+
+DispatcherConsole o-- "0..*" Command : history / queue
+ChangeFlightTimeCommand ..|> Command : реалізує
+ChangeGateCommand ..|> Command : реалізує
+
+ChangeFlightTimeCommand --> "1" ScheduleManager : керує (scheduleManager)
+ChangeGateCommand --> "1" ScheduleManager : керує (scheduleManager)
+
+DispatcherConsole ..> Logger : логує
+ScheduleManager ..> Logger : логує
+ChangeFlightTimeCommand ..> Logger : логує
+ChangeGateCommand ..> Logger : логує
+Main ..> Logger : логує
+
+@enduml

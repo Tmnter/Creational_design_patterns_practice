@@ -1,0 +1,81 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface FlightSubject <<Subject>> {
+    + subscribe(observer: FlightObserver): void
+    + unsubscribe(observer: FlightObserver): void
+    + notifyObservers(eventType: EventType, details: String): void
+}
+
+interface FlightObserver <<Observer>> {
+    + update(flight: Flight, eventType: EventType, details: String): void
+}
+
+enum EventType {
+    DELAYED
+    GATE_CHANGED
+    BOARDING_STARTED
+    - description: String
+    + getDescription(): String
+}
+
+class Flight <<ConcreteSubject>> {
+    - flightNumber: String
+    - gate: String
+    - status: String
+    - observers: List<FlightObserver>
+    + Flight(flightNumber: String, initialGate: String)
+    + getFlightNumber(): String
+    + getGate(): String
+    + subscribe(observer: FlightObserver): void
+    + unsubscribe(observer: FlightObserver): void
+    + notifyObservers(eventType: EventType, details: String): void
+    + delayFlight(minutes: int, reason: String): void
+    + changeGate(newGate: String): void
+    + startBoarding(): void
+}
+
+class DisplayBoard <<ConcreteObserver>> {
+    - terminalName: String
+    + DisplayBoard(terminalName: String)
+    + update(flight: Flight, eventType: EventType, details: String): void
+}
+
+class Passenger <<ConcreteObserver>> {
+    - fullName: String
+    + Passenger(fullName: String)
+    + update(flight: Flight, eventType: EventType, details: String): void
+}
+
+class CateringService <<ConcreteObserver>> {
+    + update(flight: Flight, eventType: EventType, details: String): void
+}
+
+class TaxiService <<ConcreteObserver>> {
+    - companyName: String
+    + TaxiService(companyName: String)
+    + update(flight: Flight, eventType: EventType, details: String): void
+}
+
+class EventLogger <<Utility>> {
+    - {static} TIME_FORMATTER: DateTimeFormatter
+    + {static} log(source: String, message: String): void
+}
+
+Flight ..|> FlightSubject
+DisplayBoard ..|> FlightObserver
+Passenger ..|> FlightObserver
+CateringService ..|> FlightObserver
+TaxiService ..|> FlightObserver
+
+Flight o--> "0..*" FlightObserver : observers
+Flight ..> EventType : uses
+FlightObserver ..> Flight : reads
+FlightObserver ..> EventType : uses
+Flight ..> EventLogger : logs
+DisplayBoard ..> EventLogger : logs
+Passenger ..> EventLogger : logs
+CateringService ..> EventLogger : logs
+TaxiService ..> EventLogger : logs
+
+@enduml
