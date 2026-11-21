@@ -1,0 +1,109 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+
+class FlightDemoRunner <<Runner>> {
+  - {static} TIME_FMT : DateTimeFormatter
+  + runScenario1() : void
+  ~ {static} log(source : String, event : String) : void
+}
+
+class Flight <<Context>> {
+  - flightNumber : String
+  - gate : String
+  - currentState : FlightState
+  - stateBeforeDelay : FlightState
+  + Flight(flightNumber : String, initialGate : String)
+  ~ setState(newState : FlightState) : void
+  ~ saveStateBeforeDelay(previousState : FlightState) : void
+  ~ getStateBeforeDelay() : FlightState
+  ~ setGateInternal(newGate : String) : void
+  + getFlightNumber() : String
+  + getGate() : String
+  + getStateName() : String
+  + openCheckIn() : void
+  + registerPassenger(passengerName : String) : void
+  + changeGate(newGate : String) : void
+  + startBoarding() : void
+  + takeOff() : void
+  + land() : void
+  + delay(reason : String) : void
+  + resumeCheckIn() : void
+  + cancel(reason : String) : void
+}
+
+interface FlightState <<State>> {
+  + getName() : String
+  + openCheckIn(flight : Flight) : void
+  + registerPassenger(flight : Flight, passengerName : String) : void
+  + changeGate(flight : Flight, newGate : String) : void
+  + startBoarding(flight : Flight) : void
+  + takeOff(flight : Flight) : void
+  + land(flight : Flight) : void
+  + delay(flight : Flight, reason : String) : void
+  + resumeCheckIn(flight : Flight) : void
+  + cancel(flight : Flight, reason : String) : void
+  + reject(flight : Flight, action : String) : void
+}
+
+class ScheduledState <<ConcreteState>> {
+  + getName() : String
+  + openCheckIn(flight : Flight) : void
+  + changeGate(flight : Flight, newGate : String) : void
+  + delay(flight : Flight, reason : String) : void
+  + cancel(flight : Flight, reason : String) : void
+}
+
+class CheckInState <<ConcreteState>> {
+  + getName() : String
+  + registerPassenger(flight : Flight, passengerName : String) : void
+  + changeGate(flight : Flight, newGate : String) : void
+  + startBoarding(flight : Flight) : void
+  + delay(flight : Flight, reason : String) : void
+  + cancel(flight : Flight, reason : String) : void
+}
+
+class BoardingState <<ConcreteState>> {
+  + getName() : String
+  + takeOff(flight : Flight) : void
+  + delay(flight : Flight, reason : String) : void
+  + cancel(flight : Flight, reason : String) : void
+}
+
+class DepartedState <<ConcreteState>> {
+  + getName() : String
+  + land(flight : Flight) : void
+}
+
+class LandedState <<ConcreteState>> {
+  + getName() : String
+}
+
+class DelayedState <<ConcreteState>> {
+  - reason : String
+  + DelayedState(reason : String)
+  + getName() : String
+  + resumeCheckIn(flight : Flight) : void
+  + openCheckIn(flight : Flight) : void
+  + cancel(flight : Flight, reason : String) : void
+}
+
+class CancelledState <<ConcreteState>> {
+  - reason : String
+  + CancelledState(reason : String)
+  + getName() : String
+}
+
+FlightDemoRunner ..> Flight : uses
+Flight "1" --> "1" FlightState : currentState >
+Flight "1" --> "0..1" FlightState : stateBeforeDelay >
+
+ScheduledState ..|> FlightState
+CheckInState ..|> FlightState
+BoardingState ..|> FlightState
+DepartedState ..|> FlightState
+LandedState ..|> FlightState
+DelayedState ..|> FlightState
+CancelledState ..|> FlightState
+
+@enduml

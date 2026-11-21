@@ -1,4 +1,8 @@
 package org.example.dispatcher;
+
+import org.example.dispatcher.Logger;
+import org.example.dispatcher.ScheduleManager;
+
 interface Command {
     void execute();
     void undo();
@@ -6,11 +10,11 @@ interface Command {
 }
 
 class ChangeFlightTimeCommand implements Command {
-    private ScheduleManager scheduleManager;
+    private org.example.dispatcher.ScheduleManager scheduleManager;
     private String previousTime;
     private String newTime;
 
-    public ChangeFlightTimeCommand(ScheduleManager scheduleManager, String newTime) {
+    public ChangeFlightTimeCommand(org.example.dispatcher.ScheduleManager scheduleManager, String newTime) {
         this.scheduleManager = scheduleManager;
         this.newTime = newTime;
     }
@@ -34,7 +38,7 @@ class ChangeFlightTimeCommand implements Command {
     }
 }
 
-class ChangeGateCommand implements Command {
+abstract class ChangeGateCommand implements Command {
     private ScheduleManager scheduleManager;
     private String previousGate;
     private String newGate;
@@ -58,7 +62,7 @@ class ChangeGateCommand implements Command {
     }
 
     @Override
-    public StringgetDescription() {
+    public String getDescription() {
         return "Зміна виходу на посадку на " + newGate;
     }
 }

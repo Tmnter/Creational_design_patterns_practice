@@ -1,4 +1,4 @@
-package org.example.controle_passenger;
+package java.org.example.controle_passenger;
 
 abstract class CheckHandler {
     protected CheckHandler nextHandler;
@@ -8,5 +8,5 @@ abstract class CheckHandler {
         return nextHandler;
     }
 
-    public abstract void handle(Passenger passenger);
+    public abstract void handle(org.example.controle_passenger.Passenger passenger);
 }
