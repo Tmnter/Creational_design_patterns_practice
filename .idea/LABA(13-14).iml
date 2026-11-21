@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/lab13_chainOfResponsibility_command/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lab14_observer_mediator/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lab15_STRATEGY_STATE_TEMPLATE_METHOD/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/lab16_MEMENTO_VISITOR_ITERATOR/src/main/java" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

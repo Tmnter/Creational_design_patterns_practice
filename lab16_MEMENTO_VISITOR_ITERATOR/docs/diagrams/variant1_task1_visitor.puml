@@ -1,0 +1,157 @@
+@startuml Variant1Task1Visitor
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+title Варіант 1. Аеропорт «Буковина» — Завдання 1 (Шаблон Visitor)
+
+interface InfrastructureObject <<Element>> {
+  + getId() : String
+  + getName() : String
+  + getStatusSummary() : String
+  + accept(visitor : AirportVisitor) : void
+}
+
+class Runway <<ConcreteElement>> {
+  - id : String
+  - name : String
+  - lengthMeters : int
+  - deicingReady : boolean
+  - fireInspectionPassed : boolean
+  + Runway(id : String, name : String, lengthMeters : int, deicingReady : boolean)
+  + getLengthMeters() : int
+  + isDeicingReady() : boolean
+  + setFireInspectionPassed(passed : boolean) : void
+  + getId() : String
+  + getName() : String
+  + getStatusSummary() : String
+  + accept(visitor : AirportVisitor) : void
+}
+
+class Terminal <<ConcreteElement>> {
+  - id : String
+  - name : String
+  - areaSqMeters : int
+  - gatesCount : int
+  - fireInspectionPassed : boolean
+  + Terminal(id : String, name : String, areaSqMeters : int, gatesCount : int)
+  + getAreaSqMeters() : int
+  + getGatesCount() : int
+  + setFireInspectionPassed(passed : boolean) : void
+  + getId() : String
+  + getName() : String
+  + getStatusSummary() : String
+  + accept(visitor : AirportVisitor) : void
+}
+
+class JetBridge <<ConcreteElement>> {
+  - id : String
+  - name : String
+  - cyclesCompleted : int
+  - fireInspectionPassed : boolean
+  + JetBridge(id : String, name : String, cyclesCompleted : int)
+  + getCyclesCompleted() : int
+  + setFireInspectionPassed(passed : boolean) : void
+  + getId() : String
+  + getName() : String
+  + getStatusSummary() : String
+  + accept(visitor : AirportVisitor) : void
+}
+
+class FuelStorage <<ConcreteElement>> {
+  - id : String
+  - name : String
+  - capacityLiters : double
+  - currentLiters : double
+  - fireInspectionPassed : boolean
+  + FuelStorage(id : String, name : String, capacityLiters : double, currentLiters : double)
+  + getCapacityLiters() : double
+  + getCurrentLiters() : double
+  + setFireInspectionPassed(passed : boolean) : void
+  + getId() : String
+  + getName() : String
+  + getStatusSummary() : String
+  + accept(visitor : AirportVisitor) : void
+}
+
+interface AirportVisitor <<Visitor>> {
+  + visitRunway(runway : Runway) : void
+  + visitTerminal(terminal : Terminal) : void
+  + visitJetBridge(jetBridge : JetBridge) : void
+  + visitFuelStorage(fuelStorage : FuelStorage) : void
+}
+
+class MaintenanceCostVisitor <<ConcreteVisitor>> {
+  - totalCost : double
+  + getTotalCost() : double
+  + visitRunway(runway : Runway) : void
+  + visitTerminal(terminal : Terminal) : void
+  + visitJetBridge(jetBridge : JetBridge) : void
+  + visitFuelStorage(fuelStorage : FuelStorage) : void
+}
+
+class FireSafetyVisitor <<ConcreteVisitor>> {
+  - checkedCount : int
+  + getCheckedCount() : int
+  + visitRunway(runway : Runway) : void
+  + visitTerminal(terminal : Terminal) : void
+  + visitJetBridge(jetBridge : JetBridge) : void
+  + visitFuelStorage(fuelStorage : FuelStorage) : void
+}
+
+class AviationAuthorityReportVisitor <<ConcreteVisitor>> {
+  - reportLines : List<String>
+  + getReportLines() : List<String>
+  + visitRunway(runway : Runway) : void
+  + visitTerminal(terminal : Terminal) : void
+  + visitJetBridge(jetBridge : JetBridge) : void
+  + visitFuelStorage(fuelStorage : FuelStorage) : void
+}
+
+class AirportInfrastructure <<ObjectStructure>> {
+  - airportName : String
+  - objects : List<InfrastructureObject>
+  + AirportInfrastructure(airportName : String)
+  + addObject(obj : InfrastructureObject) : void
+  + applyVisitor(visitor : AirportVisitor) : void
+  + logState(stageLabel : String) : void
+}
+
+class Main <<Client>> {
+  + {static} runVariant1Task1() : void
+  + {static} main(args : String[]) : void
+}
+
+InfrastructureObject <|.. Runway
+InfrastructureObject <|.. Terminal
+InfrastructureObject <|.. JetBridge
+InfrastructureObject <|.. FuelStorage
+
+AirportVisitor <|.. MaintenanceCostVisitor
+AirportVisitor <|.. FireSafetyVisitor
+AirportVisitor <|.. AviationAuthorityReportVisitor
+
+AirportInfrastructure "1" o-- "0..*" InfrastructureObject : містить >
+AirportInfrastructure ..> AirportVisitor : застосовує >
+InfrastructureObject ..> AirportVisitor : приймає >
+
+MaintenanceCostVisitor ..> Runway : обчислює >
+MaintenanceCostVisitor ..> Terminal : обчислює >
+MaintenanceCostVisitor ..> JetBridge : обчислює >
+MaintenanceCostVisitor ..> FuelStorage : обчислює >
+
+FireSafetyVisitor ..> Runway : перевіряє >
+FireSafetyVisitor ..> Terminal : перевіряє >
+FireSafetyVisitor ..> JetBridge : перевіряє >
+FireSafetyVisitor ..> FuelStorage : перевіряє >
+
+AviationAuthorityReportVisitor ..> Runway : формує звіт >
+AviationAuthorityReportVisitor ..> Terminal : формує звіт >
+AviationAuthorityReportVisitor ..> JetBridge : формує звіт >
+AviationAuthorityReportVisitor ..> FuelStorage : формує звіт >
+
+Main ..> AirportInfrastructure : створює та запускає >
+Main ..> MaintenanceCostVisitor : створює >
+Main ..> FireSafetyVisitor : створює >
+Main ..> AviationAuthorityReportVisitor : створює >
+
+@enduml
