@@ -1,0 +1,46 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+abstract class FlightServiceTemplate {
+    - flightNumber: String
+    + serveFlight(): void
+    # {abstract} getServiceTypeName(): String
+    # receiveAircraft(): void
+    # {abstract} unload(): void
+    # needsCabinCleaning(): boolean
+    # cleanCabin(): void
+    # prepareForDeparture(): void
+    # {abstract} load(): void
+    # releaseAircraft(): void
+}
+
+class PassengerFlightService {
+    # getServiceTypeName(): String
+    # unload(): void
+    # load(): void
+}
+
+class CargoFlightService {
+    # getServiceTypeName(): String
+    # unload(): void
+    # needsCabinCleaning(): boolean
+    # load(): void
+}
+
+class SanitaryFlightService {
+    # getServiceTypeName(): String
+    # unload(): void
+    # cleanCabin(): void
+    # load(): void
+}
+
+FlightServiceTemplate <|-- PassengerFlightService
+FlightServiceTemplate <|-- CargoFlightService
+FlightServiceTemplate <|-- SanitaryFlightService
+
+note top of FlightServiceTemplate
+  Патерн: Template Method
+  serveFlight() фіксує єдину послідовність
+  етапів для всіх типів рейсів
+end note
+@enduml

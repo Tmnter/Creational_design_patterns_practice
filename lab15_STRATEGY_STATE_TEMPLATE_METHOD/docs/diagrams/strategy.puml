@@ -1,0 +1,57 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+interface BillingStrategy {
+    + getStrategyName(): String
+    + calculate(context: FlightBillingContext): double
+}
+
+class FlightBillingContext {
+    - flightNumber: String
+    - airlineName: String
+    - aircraftWeightTons: double
+    - passengerCount: int
+    - baseContractRate: double
+    - strategy: BillingStrategy
+    + setStrategy(strategy: BillingStrategy): void
+    + calculateInvoice(): double
+}
+
+class WeightBasedBillingStrategy {
+    + getStrategyName(): String
+    + calculate(context: FlightBillingContext): double
+}
+
+class PassengerCountBillingStrategy {
+    + getStrategyName(): String
+    + calculate(context: FlightBillingContext): double
+}
+
+class FixedContractBillingStrategy {
+    + getStrategyName(): String
+    + calculate(context: FlightBillingContext): double
+}
+
+class PromotionalRouteBillingStrategy {
+    + getStrategyName(): String
+    + calculate(context: FlightBillingContext): double
+}
+
+class NightTariffBillingStrategy {
+    + getStrategyName(): String
+    + calculate(context: FlightBillingContext): double
+}
+
+FlightBillingContext o-- BillingStrategy : поточна стратегія
+BillingStrategy <|.. WeightBasedBillingStrategy
+BillingStrategy <|.. PassengerCountBillingStrategy
+BillingStrategy <|.. FixedContractBillingStrategy
+BillingStrategy <|.. PromotionalRouteBillingStrategy
+BillingStrategy <|.. NightTariffBillingStrategy
+
+note top of FlightBillingContext
+  Патерн: Strategy
+  Дозволяє змінювати тарифну схему
+  під час виконання без зміни коду рахунків
+end note
+@enduml
