@@ -1,0 +1,57 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Passenger {
+    - name: String
+    - seatCode: String
+    - infantWithoutSeat: boolean
+    - specialMark: String
+    + hasSpecialMark(): boolean
+}
+
+class CabinLayout {
+    - flightNumber: String
+    - rows: Map<Integer, Map<String, Passenger>>
+    - infantsWithoutSeat: List<Passenger>
+    + addSeatPassenger(rowNumber: int, seatCode: String, passenger: Passenger): void
+    + addInfantWithoutSeat(infant: Passenger): void
+    + createBoardingIterator(): Iterator<Passenger>
+    + createCateringIterator(): Iterator<Passenger>
+    + createSecuritySpecialMarkIterator(): Iterator<Passenger>
+}
+
+class BoardingRearToFrontIterator {
+    - orderedPassengers: List<Passenger>
+    - cursor: int
+    + hasNext(): boolean
+    + next(): Passenger
+}
+
+class CateringFrontToBackWithInfantsIterator {
+    - orderedPassengers: List<Passenger>
+    - cursor: int
+    + hasNext(): boolean
+    + next(): Passenger
+}
+
+class SecuritySpecialMarkIterator {
+    - filteredPassengers: List<Passenger>
+    - cursor: int
+    + hasNext(): boolean
+    + next(): Passenger
+}
+
+CabinLayout *-- Passenger : містить пасажирів
+CabinLayout ..> BoardingRearToFrontIterator : створює
+CabinLayout ..> CateringFrontToBackWithInfantsIterator : створює
+CabinLayout ..> SecuritySpecialMarkIterator : створює
+BoardingRearToFrontIterator o-- CabinLayout : читає
+CateringFrontToBackWithInfantsIterator o-- CabinLayout : читає
+SecuritySpecialMarkIterator o-- CabinLayout : читає
+
+note top of CabinLayout
+  Патерн: Iterator
+  Кожен обхід інкапсульований у власному
+  ітераторі з власним курсором стану
+end note
+@enduml

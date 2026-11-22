@@ -1,0 +1,44 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class ScheduleMemento {
+    - snapshotName: String
+    - slotsSnapshot: Map<String, FlightSlot>
+    + getSnapshotName(): String
+    + getSlotsSnapshot(): Map<String, FlightSlot>
+}
+
+class FlightSlot {
+    - flightNumber: String
+    - time: String
+    - gate: String
+    - runway: String
+    + copy(): FlightSlot
+    + update(time: String, gate: String, runway: String): void
+}
+
+class ScheduleEditor {
+    - flights: Map<String, FlightSlot>
+    + addFlight(flightNumber: String, time: String, gate: String, runway: String): void
+    + rescheduleFlight(flightNumber: String, newTime: String, newGate: String, newRunway: String): void
+    + saveSnapshot(name: String): ScheduleMemento
+    + restoreSnapshot(memento: ScheduleMemento): void
+    + printSchedule(label: String): void
+}
+
+class ScheduleHistory {
+    - versions: Map<String, ScheduleMemento>
+    + save(versionName: String, memento: ScheduleMemento): void
+    + get(versionName: String): ScheduleMemento
+}
+
+ScheduleEditor ..> ScheduleMemento : створює і відновлює
+ScheduleMemento *-- FlightSlot : глибока копія стану
+ScheduleHistory o-- ScheduleMemento : зберігає варіанти
+
+note top of ScheduleHistory
+  Патерн: Memento
+  Історія зберігає знімки, не змінюючи їх вміст
+  та не розкриваючи внутрішню структуру розкладу
+end note
+@enduml
